@@ -1,6 +1,6 @@
 -- Menü kodları
 
-local url = "https://raw.githubusercontent.com/berk2134/deneme/main/wallhackk.lua"
+local url = "https://raw.githubusercontent.com/berk2134/deneme/main/cheat.lua"
 local wallhackCode = game:HttpGet(url, true)  -- Dosyayı URL'den alır
 local wallhackEnabled = false -- Başlangıçta wallhack kapalı
 

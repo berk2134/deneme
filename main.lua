@@ -1,6 +1,6 @@
 local url = "https://raw.githubusercontent.com/berk2134/deneme/main/wallhack.lua"
-local aimbotCode = game:HttpGet(url, true)  -- Dosyayı URL'den alır
-loadstring(aimbotCode)()
+local wallhackCode = game:HttpGet(url, true)  -- Dosyayı URL'den alır
+loadstring(wallhackCode)()
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")

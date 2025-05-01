@@ -1,3 +1,7 @@
+local url = "https://raw.githubusercontent.com/yourusername/yourrepo/main/aimbot.lua"
+local aimbotCode = game:HttpGet(url, true)  -- Dosyayı URL'den alır
+loadstring(aimbotCode)()
+
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 

@@ -12,6 +12,12 @@ local function enableWallHack(character)
             -- Şeffaflığı 0 yaparak tüm parçaları görünür hale getir
             part.Transparency = 0  -- Tam görünür
             part.CanCollide = false  -- Çarpışmayı devre dışı bırak, duvarlardan geçebilmesi için
+
+            -- Eğer parça iskelet parçasıysa (örneğin, oyuncunun kolu, bacağı, vb.)
+            if part.Name == "Head" or part.Name == "Torso" or part.Name:match("Left") or part.Name:match("Right") then
+                -- İskelet parçalarını da aynı şekilde şeffaf yap
+                part.Transparency = 0
+            end
         end
     end
 end

@@ -1,6 +1,24 @@
+-- Menü kodları
+
 local url = "https://raw.githubusercontent.com/berk2134/deneme/main/wallhack.lua"
 local wallhackCode = game:HttpGet(url, true)  -- Dosyayı URL'den alır
-loadstring(wallhackCode)()
+local wallhackEnabled = false -- Başlangıçta wallhack kapalı
+
+-- Wallhack'ı etkinleştir veya devre dışı bırak
+local function toggleWallHack()
+    if wallhackEnabled then
+        -- Wallhack devre dışı bırakılacaksa, kodu durdurun (bunu manuel olarak yapmanız gerekebilir)
+        -- Burada aslında Wallhack'i durduracak bir kod eklemeniz gerekecek. Bu genellikle "Disable" veya "Disable Wallhack" gibi bir işlevle yapılır.
+        print("Wallhack devre dışı bırakıldı.")
+    else
+        -- Wallhack etkinleştir
+        loadstring(wallhackCode)()  -- wallhack.lua'yi çalıştır
+        print("Wallhack etkinleştirildi.")
+    end
+    wallhackEnabled = not wallhackEnabled  -- Durum değiştirilir
+end
+
+-- Ekrana GUI öğeleri eklenmesi
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -27,8 +45,6 @@ header.BackgroundTransparency = 0.2
 header.BorderSizePixel = 0
 header.Parent = menuFrame
 
-local contentOffsetY = 30
-
 -- Sol Panel (tam 4 buton kaplayacak şekilde)
 local totalButtons = 4
 local buttonHeight = 100
@@ -36,14 +52,14 @@ local leftPanelHeight = totalButtons * buttonHeight
 
 local leftPanel = Instance.new("Frame")
 leftPanel.Size = UDim2.new(0, 100, 0, leftPanelHeight)
-leftPanel.Position = UDim2.new(0, 0, 0, contentOffsetY)
+leftPanel.Position = UDim2.new(0, 0, 0, 30)
 leftPanel.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 leftPanel.Parent = menuFrame
 
 -- Sağ Panel
 local rightPanel = Instance.new("Frame")
-rightPanel.Size = UDim2.new(1, -100, 1, -contentOffsetY)
-rightPanel.Position = UDim2.new(0, 100, 0, contentOffsetY)
+rightPanel.Size = UDim2.new(1, -100, 1, -30)
+rightPanel.Position = UDim2.new(0, 100, 0, 30)
 rightPanel.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 rightPanel.BackgroundTransparency = 0.8
 rightPanel.Parent = menuFrame
@@ -91,6 +107,23 @@ for i, tabInfo in ipairs(tabs) do
 end
 
 tabLabels[1].Visible = true
+
+-- Wallhack Toggle Butonu
+local wallhackToggle = Instance.new("TextButton")
+wallhackToggle.Size = UDim2.new(1, 0, 0, 50)
+wallhackToggle.Position = UDim2.new(0, 0, 0, 0)
+wallhackToggle.Text = "Toggle Wallhack"
+wallhackToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+wallhackToggle.Font = Enum.Font.GothamBold
+wallhackToggle.TextSize = 20
+wallhackToggle.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+wallhackToggle.BackgroundTransparency = 0.2
+wallhackToggle.Parent = rightPanel
+
+-- Toggle işlevi
+wallhackToggle.MouseButton1Click:Connect(function()
+    toggleWallHack()
+end)
 
 -- Gökkuşağı Kenarlıklar
 local borders = {}

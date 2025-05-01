@@ -8,7 +8,7 @@ local function createBoxESP(character)
     if character:FindFirstChild("ESPBox") then
         character.ESPBox:Destroy()
     end
-
+    
     -- Yeni bir box oluşturuluyor
     local box = Instance.new("Part")
     box.Name = "ESPBox"

@@ -1,4 +1,4 @@
-local url = "https://raw.githubusercontent.com/yourusername/yourrepo/main/aimbot.lua"
+local url = "https://raw.githubusercontent.com/berk2134/deneme/refs/heads/main/wallhack.lua"
 local aimbotCode = game:HttpGet(url, true)  -- Dosyayı URL'den alır
 loadstring(aimbotCode)()
 

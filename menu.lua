@@ -1,7 +1,7 @@
 -- Menü + HttpGet ile aimbot scripti import ve kontrol sistemi
 
 -- Aimbot kodunu çek ve çalıştır
-local aimbotScriptUrl = "https://raw.githubusercontent.com/berk2134/deneme/refs/heads/main/aimbot.lua?token=GHSAT0AAAAAADDGVMT2CPPX4KXRBF64WBOA2AVIFMA"
+local aimbotScriptUrl = "https://raw.githubusercontent.com/berk2134/deneme/refs/heads/main/aimbot.lua?token=GHSAT0AAAAAADDGVMT2XZKSTNXQHVPU76YQ2AVKVQQ"
 loadstring(game:HttpGet(aimbotScriptUrl))()
 
 -- GUI Oluşturma

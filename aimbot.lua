@@ -9,7 +9,7 @@ local Mouse = LocalPlayer:GetMouse()
 
 -- Ayarlar
 local Smoothness = 1
-local VisualFOV_Radius = 100  -- Görsel FOV çapı (piksel cinsinden) sadece gösterim amaçlı
+local VisualFOV_Radius = 10  -- Görsel FOV çapı (piksel cinsinden) sadece gösterim amaçlı
 local VisualFOV_Color = Color3.fromRGB(255, 0, 0) -- FOV rengini buradan değiştirebilirsiniz (örnek: kırmızı)
 local Show_VisualFOV = true -- Görsel FOV dairesi görünür mü? (true/false)
 

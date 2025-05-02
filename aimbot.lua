@@ -8,26 +8,52 @@ local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 
 -- Ayarlar
-local TeamCheck = false
 local Smoothness = 1
-local AutoShoot = false
+local VisualFOV_Radius = 100  -- Görsel FOV çapı (piksel cinsinden) sadece gösterim amaçlı
+local VisualFOV_Color = Color3.fromRGB(255, 0, 0) -- FOV rengini buradan değiştirebilirsiniz (örnek: kırmızı)
+local Show_VisualFOV = true -- Görsel FOV dairesi görünür mü? (true/false)
 
-local isShooting = false
+-- Hayali FOV çapı da görsel FOV ile aynı büyüklükte olmalı
+local AimBot_FOV_Radius = VisualFOV_Radius  -- Gerçek kilitleme için kullanılan hayali FOV çapı, görsel FOV ile aynı
+
+local aimbot = true -- Aimbot başlangıçta aktif
 local isLeftClicking = false
+local TeamCheck = true  -- Takım arkadaşı koruması
 
--- Görüş hattı kontrolü
-local function isVisible(part)
-    local origin = Camera.CFrame.Position
-    local direction = (part.Position - origin).Unit * (part.Position - origin).Magnitude
+-- Görsel FOV dairesi için Drawing objesi
+local fovCircle -- Görsel FOV dairesi
 
-    local rayParams = RaycastParams.new()
-    rayParams.FilterDescendantsInstances = {LocalPlayer.Character}
-    rayParams.FilterType = Enum.RaycastFilterType.Blacklist
+-- Görsel FOV çizme fonksiyonu
+local function drawVisualFOV()
+    if not Show_VisualFOV then
+        if fovCircle then
+            fovCircle.Visible = false  -- FOV görünür değilse daireyi gizle
+        end
+        return
+    end
 
-    local result = workspace:Raycast(origin, direction, rayParams)
-    
-    -- Eğer raycast'in sonucu yoksa (engelsizse) doğru, aksi takdirde yanlış
-    return result == nil or result.Instance:IsDescendantOf(part.Parent)
+    if not fovCircle then
+        fovCircle = Drawing.new("Circle")
+        fovCircle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)  -- Ekranın tam ortası
+        fovCircle.Radius = VisualFOV_Radius -- Görsel FOV büyüklüğü
+        fovCircle.Color = VisualFOV_Color -- FOV rengini buradan ayarlıyoruz
+        fovCircle.Thickness = 1
+        fovCircle.Transparency = 0.5
+        fovCircle.Visible = true
+    else
+        fovCircle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)  -- Ekranın tam ortası
+        fovCircle.Radius = VisualFOV_Radius -- Görsel FOV büyüklüğü
+    end
+end
+
+-- Hayali FOV içindeki hedefi kontrol et (kilitleme alanı)
+local function isInAimBotFOV(targetPosition)
+    local centerX, centerY = Mouse.X, Mouse.Y
+    local screenPoint, onScreen = Camera:WorldToViewportPoint(targetPosition)
+    local distance = (Vector2.new(centerX, centerY) - Vector2.new(screenPoint.X, screenPoint.Y)).Magnitude
+
+    -- Hayali FOV sınırları içinde olup olmadığını kontrol et
+    return distance <= AimBot_FOV_Radius
 end
 
 -- En yakın hedefi bul
@@ -37,14 +63,18 @@ local function getClosestPlayer()
 
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
-            if TeamCheck and player.Team == LocalPlayer.Team then continue end
+            -- Takım arkadaşı kontrolü
+            if TeamCheck and player.Team == LocalPlayer.Team then
+                continue -- Aynı takımdan ise geç
+            end
 
             local head = player.Character.Head
             local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
 
-            if humanoid and humanoid.Health > 0 and isVisible(head) then
-                local screenPoint, onScreen = Camera:WorldToViewportPoint(head.Position)
-                if onScreen then
+            if humanoid and humanoid.Health > 0 then
+                -- Eğer hedef Hayali FOV dairesinin içinde ise, o oyuncuya kilitlen
+                if isInAimBotFOV(head.Position) then
+                    local screenPoint, onScreen = Camera:WorldToViewportPoint(head.Position)
                     local distance = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(screenPoint.X, screenPoint.Y)).Magnitude
                     if distance < shortestDistance then
                         shortestDistance = distance
@@ -73,26 +103,19 @@ end)
 
 -- Render döngüsü
 RunService.RenderStepped:Connect(function()
-    local target = getClosestPlayer()
+    if aimbot and isLeftClicking then
+        local target = getClosestPlayer()
 
-    if target and (AutoShoot or isLeftClicking) then
-        -- Aimbot aktif olacak
-        local camPos = Camera.CFrame.Position
-        local newLook = (target.Position - camPos).Unit
-        local currentLook = Camera.CFrame.LookVector
-        local lerpedLook = currentLook:Lerp(newLook, math.clamp(1 / Smoothness, 0, 1))
-        Camera.CFrame = CFrame.new(camPos, camPos + lerpedLook)
-
-        -- Otomatik ateş (sadece AutoShoot açıkken)
-        if AutoShoot and not isShooting then
-            isShooting = true
-            VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-        end
-    else
-        -- Hedef yoksa ateşi bırak
-        if isShooting then
-            isShooting = false
-            VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0)
+        if target then
+            -- Aimbot aktif olacak
+            local camPos = Camera.CFrame.Position
+            local newLook = (target.Position - camPos).Unit
+            local currentLook = Camera.CFrame.LookVector
+            local lerpedLook = currentLook:Lerp(newLook, math.clamp(1 / Smoothness, 0, 1))
+            Camera.CFrame = CFrame.new(camPos, camPos + lerpedLook)
         end
     end
+
+    -- Görsel FOV dairesini her render adımında çiz
+    drawVisualFOV()
 end)

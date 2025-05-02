@@ -1,168 +1,96 @@
--- Menü kodları
+-- Menü + HttpGet ile aimbot scripti import ve kontrol sistemi
 
-local url = "https://raw.githubusercontent.com/berk2134/deneme/main/cheat.lua"
-local wallhackCode = game:HttpGet(url, true)  -- Dosyayı URL'den alır
-local wallhackEnabled = false -- Başlangıçta wallhack kapalı
+-- Aimbot kodunu çek ve çalıştır
+local aimbotScriptUrl = "https://raw.githubusercontent.com/berk2134/deneme/refs/heads/main/aimbot.lua?token=GHSAT0AAAAAADDGVMT2CPPX4KXRBF64WBOA2AVIFMA"
+loadstring(game:HttpGet(aimbotScriptUrl))()
 
--- Wallhack'ı etkinleştir veya devre dışı bırak
-local function toggleWallHack()
-    if wallhackEnabled then
-        -- Wallhack devre dışı bırakılacaksa, kodu durdurun (bunu manuel olarak yapmanız gerekebilir)
-        -- Burada aslında Wallhack'i durduracak bir kod eklemeniz gerekecek. Bu genellikle "Disable" veya "Disable Wallhack" gibi bir işlevle yapılır.
-        print("Wallhack devre dışı bırakıldı.")
-    else
-        -- Wallhack etkinleştir
-        loadstring(wallhackCode)()  -- wallhack.lua'yi çalıştır
-        print("Wallhack etkinleştirildi.")
-    end
-    wallhackEnabled = not wallhackEnabled  -- Durum değiştirilir
-end
+-- GUI Oluşturma
+local UserInputService = game:GetService("UserInputService")
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local Open = true
 
--- Ekrana GUI öğeleri eklenmesi
+-- Frame
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Size = UDim2.new(0, 300, 0, 300)
+Frame.Position = UDim2.new(0.5, -150, 0.5, -150)
+Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Frame.BorderSizePixel = 0
+Frame.Active = true
+Frame.Draggable = true
+Frame.ZIndex = 1000
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-
--- Ana Menü
-local menuFrame = Instance.new("Frame")
-menuFrame.Size = UDim2.new(0, 600, 0, 430)
-menuFrame.Position = UDim2.new(0.5, -300, 0.5, -215)
-menuFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-menuFrame.BorderSizePixel = 0
-menuFrame.Parent = screenGui
-
--- Header (Vortex Premium)
-local header = Instance.new("TextLabel")
-header.Size = UDim2.new(1, 0, 0, 30)
-header.Position = UDim2.new(0, 0, 0, 0)
-header.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-header.Text = "Vortex Premium"
-header.TextColor3 = Color3.fromRGB(255, 255, 255)
-header.Font = Enum.Font.GothamBold
-header.TextSize = 18
-header.TextStrokeTransparency = 0.8
-header.BackgroundTransparency = 0.2
-header.BorderSizePixel = 0
-header.Parent = menuFrame
-
--- Sol Panel (tam 4 buton kaplayacak şekilde)
-local totalButtons = 4
-local buttonHeight = 100
-local leftPanelHeight = totalButtons * buttonHeight
-
-local leftPanel = Instance.new("Frame")
-leftPanel.Size = UDim2.new(0, 100, 0, leftPanelHeight)
-leftPanel.Position = UDim2.new(0, 0, 0, 30)
-leftPanel.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-leftPanel.Parent = menuFrame
-
--- Sağ Panel
-local rightPanel = Instance.new("Frame")
-rightPanel.Size = UDim2.new(1, -100, 1, -30)
-rightPanel.Position = UDim2.new(0, 100, 0, 30)
-rightPanel.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-rightPanel.BackgroundTransparency = 0.8
-rightPanel.Parent = menuFrame
-
--- Sekmeler ve içerikler
-local tabs = {
-    {icon = "🎯", label = "Aimbot"},
-    {icon = "👁", label = "Wallhack"},
-    {icon = "👟", label = "Movement"},
-    {icon = "⚙", label = "Misc"},
-}
-
-local tabLabels = {}
-
-for i, tabInfo in ipairs(tabs) do
-    local button = Instance.new("TextButton")
-    button.Size = UDim2.new(1, 0, 0, buttonHeight)
-    button.Position = UDim2.new(0, 0, 0, (i - 1) * buttonHeight)
-    button.Text = tabInfo.icon
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    button.Font = Enum.Font.GothamBlack
-    button.TextSize = 30
-    button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    button.BackgroundTransparency = 0.2
-    button.Parent = leftPanel
-
-    local tabLabel = Instance.new("TextLabel")
-    tabLabel.Size = UDim2.new(1, 0, 1, 0)
-    tabLabel.Text = tabInfo.label .. " Section"
-    tabLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    tabLabel.Font = Enum.Font.Gotham
-    tabLabel.TextSize = 25
-    tabLabel.BackgroundTransparency = 1
-    tabLabel.Visible = false
-    tabLabel.Parent = rightPanel
-
-    tabLabels[i] = tabLabel
-
-    button.MouseButton1Click:Connect(function()
-        for _, l in pairs(tabLabels) do
-            l.Visible = false
-        end
-        tabLabel.Visible = true
-    end)
-end
-
-tabLabels[1].Visible = true
-
--- Wallhack Toggle Butonu
-local wallhackToggle = Instance.new("TextButton")
-wallhackToggle.Size = UDim2.new(1, 0, 0, 50)
-wallhackToggle.Position = UDim2.new(0, 0, 0, 0)
-wallhackToggle.Text = "Toggle Wallhack"
-wallhackToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
-wallhackToggle.Font = Enum.Font.GothamBold
-wallhackToggle.TextSize = 20
-wallhackToggle.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
-wallhackToggle.BackgroundTransparency = 0.2
-wallhackToggle.Parent = rightPanel
-
--- Toggle işlevi
-wallhackToggle.MouseButton1Click:Connect(function()
-    toggleWallHack()
+-- Aimbot Toggle
+local aimbotToggle = Instance.new("TextButton", Frame)
+aimbotToggle.Size = UDim2.new(1, -20, 0, 30)
+aimbotToggle.Position = UDim2.new(0, 10, 0, 10)
+aimbotToggle.Text = "Aimbot: Kapalı"
+aimbotToggle.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+aimbotToggle.MouseButton1Click:Connect(function()
+    getgenv().aimbot = not getgenv().aimbot
+    aimbotToggle.Text = "Aimbot: " .. (getgenv().aimbot and "Açık" or "Kapalı")
 end)
 
--- Gökkuşağı Kenarlıklar
-local borders = {}
+-- Team Check Toggle
+local teamToggle = aimbotToggle:Clone()
+teamToggle.Parent = Frame
+teamToggle.Position = UDim2.new(0, 10, 0, 50)
+teamToggle.Text = "TeamCheck: Açık"
+teamToggle.MouseButton1Click:Connect(function()
+    getgenv().TeamCheck = not getgenv().TeamCheck
+    teamToggle.Text = "TeamCheck: " .. (getgenv().TeamCheck and "Açık" or "Kapalı")
+end)
 
-for i = 1, 4 do
-    local border = Instance.new("Frame")
-    border.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    border.BorderSizePixel = 0
-    border.ZIndex = 2
-    border.Parent = menuFrame
+-- Show FOV Toggle
+local fovToggle = teamToggle:Clone()
+fovToggle.Parent = Frame
+fovToggle.Position = UDim2.new(0, 10, 0, 90)
+fovToggle.Text = "Show FOV: Açık"
+fovToggle.MouseButton1Click:Connect(function()
+    getgenv().Show_VisualFOV = not getgenv().Show_VisualFOV
+    fovToggle.Text = "Show FOV: " .. (getgenv().Show_VisualFOV and "Açık" or "Kapalı")
+end)
 
-    if i == 1 then -- üst
-        border.Size = UDim2.new(1, 0, 0, 2)
-        border.Position = UDim2.new(0, 0, 0, 0)
-    elseif i == 2 then -- alt
-        border.Size = UDim2.new(1, 0, 0, 2)
-        border.Position = UDim2.new(0, 0, 1, -2)
-    elseif i == 3 then -- sol
-        border.Size = UDim2.new(0, 2, 1, 0)
-        border.Position = UDim2.new(0, 0, 0, 0)
-    elseif i == 4 then -- sağ
-        border.Size = UDim2.new(0, 2, 1, 0)
-        border.Position = UDim2.new(1, -2, 0, 0)
+-- Smoothness Slider (basit input)
+local smoothInput = Instance.new("TextBox", Frame)
+smoothInput.Size = UDim2.new(1, -20, 0, 30)
+smoothInput.Position = UDim2.new(0, 10, 0, 130)
+smoothInput.PlaceholderText = "Smoothness (sayi gir)"
+smoothInput.Text = ""
+smoothInput.FocusLost:Connect(function()
+    local num = tonumber(smoothInput.Text)
+    if num then
+        getgenv().Smoothness = num
     end
+end)
 
-    table.insert(borders, border)
-end
-
--- Gökkuşağı animasyonu
-local function rainbowCycle()
-    local hue = 0
-    while true do
-        local color = Color3.fromHSV(hue, 1, 1)
-        for _, b in pairs(borders) do
-            b.BackgroundColor3 = color
-        end
-        hue = (hue + 0.01) % 1
-        wait(0.03)
+-- FOV Radius Slider
+local fovRadius = smoothInput:Clone()
+fovRadius.Parent = Frame
+fovRadius.Position = UDim2.new(0, 10, 0, 170)
+fovRadius.PlaceholderText = "FOV Radius (sayi gir)"
+fovRadius.FocusLost:Connect(function()
+    local num = tonumber(fovRadius.Text)
+    if num then
+        getgenv().VisualFOV_Radius = num
     end
-end
+end)
 
-spawn(rainbowCycle)
+-- Color Picker (RGB textbox)
+local colorBox = fovRadius:Clone()
+colorBox.Parent = Frame
+colorBox.Position = UDim2.new(0, 10, 0, 210)
+colorBox.PlaceholderText = "RGB renk (255,0,0)"
+colorBox.FocusLost:Connect(function()
+    local r, g, b = string.match(colorBox.Text, "(%d+),%s*(%d+),%s*(%d+)")
+    if r and g and b then
+        getgenv().VisualFOV_Color = Color3.fromRGB(tonumber(r), tonumber(g), tonumber(b))
+    end
+end)
+
+-- INS tuşuyla menü göster/gizle
+UserInputService.InputBegan:Connect(function(input, gp)
+    if input.KeyCode == Enum.KeyCode.Insert then
+        Open = not Open
+        Frame.Visible = Open
+    end
+end)

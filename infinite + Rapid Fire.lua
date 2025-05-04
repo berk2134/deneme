@@ -1,41 +1,46 @@
--- ReplicatedStorage'deki Weapons klasörünü alıyoruz
+-- Ana ayarlar
+local enabled = true
+
+-- Özelleştirilebilir değerler
+local enable_custom_ammo = true
+local custom_ammo_value = 500
+
+local enable_custom_fire_rate = true
+local custom_fire_rate = 0.1
+
+local no_fire_limit = true -- MaxFire özelliği kaldırılacak mı?
+
+-- Silahlar klasörü
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local WeaponsFolder = ReplicatedStorage:WaitForChild("Weapons")
 
--- Sonsuz mermi sağlamak ve ateşleme sınırını kaldırmak için fonksiyon
-local function removeFireLimit()
-    -- Tüm silahları kontrol ediyoruz
-    for _, weapon in pairs(WeaponsFolder:GetChildren()) do
-        -- Silahın "Ammo" adında bir özelliği varsa
-        local ammo = weapon:FindFirstChild("Ammo")
-        local fireRate = weapon:FindFirstChild("FireRate") -- Ateşleme hızını kontrol et
-        local maxFire = weapon:FindFirstChild("MaxFire") -- Eğer varsa, max ateşleme sınırını kontrol et
+-- Uygulama fonksiyonu
+local function applyWeaponMods()
+	for _, weapon in pairs(WeaponsFolder:GetChildren()) do
+		if weapon:IsA("Folder") or weapon:IsA("Model") then
+			local ammo = weapon:FindFirstChild("Ammo")
+			local fireRate = weapon:FindFirstChild("FireRate")
+			local maxFire = weapon:FindFirstChild("MaxFire")
 
-        -- Ammo, FireRate ve MaxFire varsa işlemleri uyguluyoruz
-        if ammo then
-            -- Ammo'yu sonsuza kadar yapıyoruz
-            ammo.Value = 9999
-        end
+			if enable_custom_ammo and ammo then
+				ammo.Value = custom_ammo_value
+			end
 
-        if fireRate then
-            -- FireRate'i değiştirebiliriz, ancak genellikle bu değer düşük tutulur. Sınırsız yapabiliriz.
-            fireRate.Value = 0 -- Bu, kesintisiz ateş etme sağlar 
-        end
+			if enable_custom_fire_rate and fireRate then
+				fireRate.Value = custom_fire_rate
+			end
 
-        if maxFire then
-            -- MaxFire'ı kaldırıyoruz, böylece ateşleme sınırlaması olmadan silah sıkabilir
-            maxFire.Value = math.huge -- Sonsuz bir değere ayarlıyoruz
-        end
-    end
+			if no_fire_limit and maxFire then
+				maxFire.Value = math.huge
+			end
+		end
+	end
 end
 
--- enabled kontrol değişkeni
-local enabled = true  -- Bu değişkeni true yaparak aktif edebilirsiniz
-
--- Sonsuz mermi ve ateşleme sınırını kaldırmak için sürekli olarak her 0.1 saniyede bir tekrar çalıştırıyoruz
+-- Sürekli kontrol
 while true do
-    if enabled then
-        removeFireLimit()
-    end
-    wait(0.1) -- 0.1 saniyede bir tekrar
+	if enabled then
+		applyWeaponMods()
+	end
+	task.wait(0.1)
 end

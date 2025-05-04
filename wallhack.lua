@@ -6,7 +6,7 @@ local LocalPlayer = Players.LocalPlayer
 -- Ayarlar
 local BoxColor = Color3.fromRGB(255, 0, 0)
 local BoxThickness = 2
-local TeamCheck = true
+local eTeamCheck = true
 local ShowNames = true
 local ShowTracers = true
 

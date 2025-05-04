@@ -20,6 +20,9 @@ local isThirdPerson = false
 local yaw, pitch    = 0, 0
 local zoomDistance  = thirdOffset.Z               -- Başlangıçta belirlenen zoom mesafesi
 
+-- 3rd modu kontrol etmek için eklenen değişken
+local 3rd = false -- true yaparsanız, V tuşuyla geçiş aktif olacak
+
 -- Yardımcı: Karakter hazır mı?
 local function getCharacter()
     local c = player.Character
@@ -71,11 +74,13 @@ RunService.RenderStepped:Connect(updateCamera)
 -- Tuş ile kamera modu geçişi
 UserInput.InputBegan:Connect(function(inp, gpe)
     if not gpe and inp.KeyCode == toggleKey then
-        isThirdPerson = not isThirdPerson
+        if 3rd then  -- Eğer 3rd true ise, geçiş yapılabilir
+            isThirdPerson = not isThirdPerson
 
-        -- Fare imlecini gizle/göster
-        UserInput.MouseBehavior = isThirdPerson and Enum.MouseBehavior.LockCenter
-                                 or Enum.MouseBehavior.Default
+            -- Fare imlecini gizle/göster
+            UserInput.MouseBehavior = isThirdPerson and Enum.MouseBehavior.LockCenter
+                                     or Enum.MouseBehavior.Default
+        end
     end
 end)
 
@@ -86,3 +91,9 @@ player.CharacterAdded:Connect(function()
     zoomDistance  = thirdOffset.Z
     UserInput.MouseBehavior = Enum.MouseBehavior.Default
 end)
+
+-- 3rd kontrolü: true olduğunda, geçiş aktif olacak
+if 3rd then
+    isThirdPerson = true
+    UserInput.MouseBehavior = Enum.MouseBehavior.LockCenter
+end

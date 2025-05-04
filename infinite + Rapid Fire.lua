@@ -29,8 +29,13 @@ local function removeFireLimit()
     end
 end
 
+-- enabled kontrol değişkeni
+local enabled = true  -- Bu değişkeni true yaparak aktif edebilirsiniz
+
 -- Sonsuz mermi ve ateşleme sınırını kaldırmak için sürekli olarak her 0.1 saniyede bir tekrar çalıştırıyoruz
 while true do
-    removeFireLimit()
+    if enabled then
+        removeFireLimit()
+    end
     wait(0.1) -- 0.1 saniyede bir tekrar
 end

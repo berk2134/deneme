@@ -21,7 +21,7 @@ local yaw, pitch    = 0, 0
 local zoomDistance  = thirdOffset.Z               -- Başlangıçta belirlenen zoom mesafesi
 
 -- 3rd modu kontrol etmek için eklenen değişken
-local 3rd = false -- true yaparsanız, V tuşuyla geçiş aktif olacak
+local rd3 = false -- true yaparsanız, V tuşuyla geçiş aktif olacak
 
 -- Yardımcı: Karakter hazır mı?
 local function getCharacter()

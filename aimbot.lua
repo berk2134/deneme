@@ -11,13 +11,13 @@ local Mouse = LocalPlayer:GetMouse()
 local Smoothness = 1
 local VisualFOV_Radius = 10
 local VisualFOV_Color = Color3.fromRGB(255, 0, 0)
-local Show_VisualFOV = true
+local Show_VisualFOV = false
 local AimBot_FOV_Radius = VisualFOV_Radius
 
-local aimbot = true
+local aimbot = false
 local isLeftClicking = false
-local TeamCheck = true
-local visibility = true -- 👈 GÖRÜNÜRLÜK KONTROLÜ BURADA
+local TeamCheck = false
+local visibility = false -- 👈 GÖRÜNÜRLÜK KONTROLÜ BURADA
 
 local fovCircle
 

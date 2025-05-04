@@ -6,10 +6,10 @@ local LocalPlayer = Players.LocalPlayer
 -- Ayarlar
 local BoxColor = Color3.fromRGB(255, 0, 0)
 local BoxThickness = 2
-local eTeamCheck = true
-local ShowNames = true
-local ShowTracers = true
-local Box = true  -- Box'ı aktif edebilmek için yeni bir değişken
+local eTeamCheck = false
+local ShowNames = false
+local ShowTracers = false
+local Box = false  -- Box'ı aktif edebilmek için yeni bir değişken
 
 -- ESP tabloları
 local espBoxes = {}

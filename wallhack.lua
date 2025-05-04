@@ -9,6 +9,7 @@ local BoxThickness = 2
 local eTeamCheck = true
 local ShowNames = true
 local ShowTracers = true
+local Box = true  -- Box'ı aktif edebilmek için yeni bir değişken
 
 -- ESP tabloları
 local espBoxes = {}
@@ -43,7 +44,7 @@ local function UpdateESP(player)
 		return
 	end
 
-	if TeamCheck and player.Team == LocalPlayer.Team then
+	if eTeamCheck and player.Team == LocalPlayer.Team then
 		removeESP(player)
 		return
 	end
@@ -60,23 +61,27 @@ local function UpdateESP(player)
 		local x = headPos.X - width / 2
 		local y = headPos.Y
 
-		if not espBoxes[player] then
-			local box = Drawing.new("Quad")
-			box.Thickness = BoxThickness
-			box.Color = BoxColor
-			box.Transparency = 1
-			box.Filled = false
+		-- Box'ı çizme işlemi sadece Box değişkeni aktifse yapılır
+		if Box then
+			if not espBoxes[player] then
+				local box = Drawing.new("Quad")
+				box.Thickness = BoxThickness
+				box.Color = BoxColor
+				box.Transparency = 1
+				box.Filled = false
+				box.Visible = true
+				espBoxes[player] = box
+			end
+
+			local box = espBoxes[player]
+			box.PointA = Vector2.new(x, y)
+			box.PointB = Vector2.new(x + width, y)
+			box.PointC = Vector2.new(x + width, y + height)
+			box.PointD = Vector2.new(x, y + height)
 			box.Visible = true
-			espBoxes[player] = box
 		end
 
-		local box = espBoxes[player]
-		box.PointA = Vector2.new(x, y)
-		box.PointB = Vector2.new(x + width, y)
-		box.PointC = Vector2.new(x + width, y + height)
-		box.PointD = Vector2.new(x, y + height)
-		box.Visible = true
-
+		-- İsimler gösterilsin mi?
 		if ShowNames then
 			if not nameTags[player] then
 				local tag = Drawing.new("Text")
@@ -94,6 +99,7 @@ local function UpdateESP(player)
 			tag.Visible = true
 		end
 
+		-- Tracerlar gösterilsin mi?
 		if ShowTracers then
 			if not tracers[player] then
 				local tracer = Drawing.new("Line")
@@ -131,14 +137,4 @@ Players.PlayerAdded:Connect(function(player)
 end)
 
 -- Oyuncu çıkarsa kutuyu kaldır
-Players.PlayerRemoving:Connect(removeESP)
-
--- Round bitince isimleri temizle (MVP ekranı kalmasın)
-local roundEvent = game:GetService("ReplicatedStorage"):FindFirstChild("Events") and game:GetService("ReplicatedStorage").Events:FindFirstChild("RoundEnded")
-if roundEvent then
-	roundEvent.OnClientEvent:Connect(function()
-		for _, tag in pairs(nameTags) do
-			tag.Visible = false
-		end
-	end)
-end
+Players

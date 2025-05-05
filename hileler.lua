@@ -1,7 +1,9 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local Camera = workspace.CurrentCamera
-local LocalPlayer = Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local Camera = Workspace.CurrentCamera
+local Lighting = game:GetService("Lighting")
 
 -- Ayarlar
 local BoxColor = Color3.fromRGB(255, 0, 0) -- Box renk

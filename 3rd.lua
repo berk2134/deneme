@@ -74,7 +74,7 @@ RunService.RenderStepped:Connect(updateCamera)
 -- Tuş ile kamera modu geçişi
 UserInput.InputBegan:Connect(function(inp, gpe)
     if not gpe and inp.KeyCode == toggleKey then
-        if 3rd then  -- Eğer 3rd true ise, geçiş yapılabilir
+        if rd3 then  -- Eğer 3rd true ise, geçiş yapılabilir
             isThirdPerson = not isThirdPerson
 
             -- Fare imlecini gizle/göster
@@ -93,7 +93,7 @@ player.CharacterAdded:Connect(function()
 end)
 
 -- 3rd kontrolü: true olduğunda, geçiş aktif olacak
-if 3rd then
+if rd3 then
     isThirdPerson = true
     UserInput.MouseBehavior = Enum.MouseBehavior.LockCenter
 end

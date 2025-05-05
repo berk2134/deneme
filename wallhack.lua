@@ -9,8 +9,8 @@ local TracerColor = Color3.fromRGB(0, 255, 0) -- Tracer çizgisi rengi
 local BoxThickness = 2
 local eTeamCheck = false
 local ShowNames = false
-local ShowTracers = true  -- Tracer'ları aktif etmek için
-local Box = true  -- Box'ı aktif edebilmek için
+local ShowTracers = false  -- Tracer'ları aktif etmek için
+local Box = false  -- Box'ı aktif edebilmek için
 
 -- ESP tabloları
 local espBoxes = {}

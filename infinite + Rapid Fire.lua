@@ -1,14 +1,14 @@
 -- Ana ayarlar
-local enabled = true
+local enabled = false
 
 -- Özelleştirilebilir değerler
-local enable_custom_ammo = true
+local enable_custom_ammo = false
 local custom_ammo_value = 500
 
-local enable_custom_fire_rate = true
+local enable_custom_fire_rate = false
 local custom_fire_rate = 0.1
 
-local no_fire_limit = true -- MaxFire özelliği kaldırılacak mı?
+local no_fire_limit = false -- MaxFire özelliği kaldırılacak mı?
 
 -- Silahlar klasörü
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
